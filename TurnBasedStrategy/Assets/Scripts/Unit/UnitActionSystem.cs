@@ -1,15 +1,27 @@
+using System;
 using UnityEngine;
 
-public class UnitActionSystem : MonoBehaviour
+public class UnitActionSystem : SingletonMonobehaviour<UnitActionSystem> 
 {
     [SerializeField] private Unit selectedUnit;
     [SerializeField] private LayerMask unitLayerMask;
 
+    public event Action OnSelectedUnitChanged;
+
     private Camera cameraCache;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         cameraCache = Camera.main;
+    }
+
+    private void Start()
+    {
+        if (selectedUnit != null)
+        {
+            OnSelectedUnitChanged?.Invoke();
+        }
     }
 
     private void Update()
@@ -25,11 +37,16 @@ public class UnitActionSystem : MonoBehaviour
         }
     }
 
+    public Unit GetSelectedUnit()
+    {
+        return selectedUnit;
+    }
+
     private void MoveSelectedUnit()
     {
         if (selectedUnit != null)
         {
-            selectedUnit.SetTargetPosition(MouseWorld.GetPosition());
+            selectedUnit.SetTargetPosition(MouseWorld.GetMousePosition());
         }
     }
 
@@ -41,7 +58,11 @@ public class UnitActionSystem : MonoBehaviour
         {
             if (hitInfo.transform.TryGetComponent(out Unit unit))
             {
-                selectedUnit = unit;
+                if (selectedUnit != unit)
+                {
+                    selectedUnit = unit;
+                    OnSelectedUnitChanged?.Invoke();
+                }
             }
         }
     }
