@@ -27,6 +27,16 @@ public class GridSystem
         }
     }
 
+    public int GetWidth()
+    {
+        return width;
+    }
+
+    public int GetHeight()
+    {
+        return height;
+    }
+
     public Vector3 GetWorldPositionFromCoordinates(GridPosition gridPosition)
     {
         return new Vector3(gridPosition.x, 0, gridPosition.z) * cellSize;
@@ -36,6 +46,11 @@ public class GridSystem
     {
         return new GridPosition(Mathf.RoundToInt(worldPosition.x / cellSize), 
             Mathf.RoundToInt(worldPosition.z / cellSize));
+    }
+
+    public Vector3 GetWorldPosition(GridPosition gridPosition)
+    {
+        return GetWorldPositionFromCoordinates(gridPosition);
     }
 
     public void CreateDebugObjects(Transform debugPrefab, Transform parentTransfrom)
@@ -60,4 +75,13 @@ public class GridSystem
     {
         return gridObjectArray[gridPosition.x, gridPosition.z];
     }
+
+    public bool IsValidGridPosition(GridPosition gridPosition)
+    {
+        return gridPosition.x >= 0 &&
+                gridPosition.z >= 0 &&
+                gridPosition.x < width &&
+                gridPosition.z < height;
+    }
+
 }

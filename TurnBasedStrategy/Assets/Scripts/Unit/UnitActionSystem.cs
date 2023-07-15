@@ -10,6 +10,8 @@ public class UnitActionSystem : SingletonMonobehaviour<UnitActionSystem>
 
     private Camera cameraCache;
 
+    private bool isBusy;
+
     protected override void Awake()
     {
         base.Awake();
@@ -26,8 +28,14 @@ public class UnitActionSystem : SingletonMonobehaviour<UnitActionSystem>
 
     private void Update()
     {
+        if (isBusy)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(1))
         {
+            SetBusy();
             MoveSelectedUnit();
         }
 
@@ -35,6 +43,22 @@ public class UnitActionSystem : SingletonMonobehaviour<UnitActionSystem>
         {
             HandleUnitSelection();
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1)) 
+        {
+            SetBusy();
+            selectedUnit.GetSpinAction().Spin(ClearBusy);
+        }
+    }
+
+    public void SetBusy()
+    {
+        isBusy = true;
+    }
+
+    public void ClearBusy()
+    {
+        isBusy = false;
     }
 
     public Unit GetSelectedUnit()
@@ -46,7 +70,13 @@ public class UnitActionSystem : SingletonMonobehaviour<UnitActionSystem>
     {
         if (selectedUnit != null)
         {
-            selectedUnit.SetTargetPosition(MouseWorld.GetMousePosition());
+            GridPosition mouseGridPosition = LevelGrid.Instance.
+                GetGridPosition(MouseWorld.GetMousePosition());
+
+            if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition))
+            {
+                selectedUnit.GetMoveAction().Move(mouseGridPosition, ClearBusy);
+            }
         }
     }
 

@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7331424488420451506}
   - component: {fileID: 2340558882863752357}
   - component: {fileID: 10878743624676703}
+  - component: {fileID: 4787362312696149636}
+  - component: {fileID: 60440393443408667}
   m_Layer: 7
   m_Name: Unit
   m_TagString: Untagged
@@ -61,9 +63,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f206fcb9bb89f346a5226d31abf7da7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 2391156565264955599}
-  moveSpeed: 5
-  rotationSpeed: 10
+  moveAction: {fileID: 4787362312696149636}
+  spinAction: {fileID: 60440393443408667}
 --- !u!114 &10878743624676703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,6 +79,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 2340558882863752357}
   meshRenderer: {fileID: 2079462943517992384}
+--- !u!114 &4787362312696149636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2340558882863752355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb7f919b6736a374d8357a0f49052fa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 2391156565264955599}
+  moveSpeed: 3
+  rotationSpeed: 50
+  maxMoveDistance: 4
+--- !u!114 &60440393443408667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2340558882863752355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2786769d51e87643a1111689ecec4fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3404252991843809694
 GameObject:
   m_ObjectHideFlags: 0
