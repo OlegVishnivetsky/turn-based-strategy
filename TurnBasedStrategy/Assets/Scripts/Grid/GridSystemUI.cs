@@ -52,7 +52,9 @@ public class GridSystemUI : SingletonMonobehaviour<GridSystemUI>
     private void UpdateGridUI()
     {
         HideAllGridPosition();
-        ShowGridPositionList(UnitActionSystem.Instance.GetSelectedUnit().
-            GetMoveAction().GetValidActionGridPositionList());
+
+        BaseAction action = UnitActionSystem.Instance.GetSelectedAction();
+
+        ShowGridPositionList(action.GetValidActionGridPositionList());
     }
 }
