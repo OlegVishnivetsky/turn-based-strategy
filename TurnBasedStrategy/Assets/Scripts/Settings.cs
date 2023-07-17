@@ -2,6 +2,8 @@ using UnityEngine;
 
 public static class Settings
 {
+    public const int actionPointMax = 2;
+
     public const float minFollowYOffset = 4f;
     public const float maxFollowYOffset = 12f;
 

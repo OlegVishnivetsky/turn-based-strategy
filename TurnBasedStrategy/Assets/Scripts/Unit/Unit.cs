@@ -17,6 +17,16 @@ public class Unit : MonoBehaviour
         baseActions = GetComponents<BaseAction>();
     }
 
+    private void OnEnable()
+    {
+        TurnSystem.OnTurnNumberChanged += Instance_OnTurnNumberChanged;
+    }
+
+    private void OnDisable()
+    {
+        TurnSystem.OnTurnNumberChanged -= Instance_OnTurnNumberChanged;
+    }
+
     private void Start()
     {   
         gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
@@ -86,5 +96,10 @@ public class Unit : MonoBehaviour
     private void SpendActionPoints(int amount)
     {
         actionPoints -= amount;
+    }
+
+    private void Instance_OnTurnNumberChanged(int turnNumber)
+    {
+        actionPoints = Settings.actionPointMax;
     }
 }

@@ -15,6 +15,7 @@ public class UnitActionSystemUI : MonoBehaviour
         UnitActionSystem.Instance.OnSelectedUnitChanged += Instance_OnSelectedUnitChanged;
         UnitActionSystem.Instance.OnSelectedActionChanged += Instance_OnSelectedActionChanged;
         UnitActionSystem.Instance.OnActionStarted += Instance_OnActionStarted;
+        TurnSystem.OnTurnNumberChanged += Instance_OnTurnNumberChanged;
     }
 
     private void OnDisable()
@@ -22,6 +23,7 @@ public class UnitActionSystemUI : MonoBehaviour
         UnitActionSystem.Instance.OnSelectedUnitChanged -= Instance_OnSelectedUnitChanged;
         UnitActionSystem.Instance.OnSelectedActionChanged -= Instance_OnSelectedActionChanged;
         UnitActionSystem.Instance.OnActionStarted -= Instance_OnActionStarted;
+        TurnSystem.OnTurnNumberChanged -= Instance_OnTurnNumberChanged;
     }
 
     private void Start()
@@ -46,6 +48,11 @@ public class UnitActionSystemUI : MonoBehaviour
     private void Instance_OnSelectedActionChanged()
     {
         UpdateSelectionVisual();
+    }
+
+    private void Instance_OnTurnNumberChanged(int turnNumber)
+    {
+        UpdateActionPointsText();
     }
 
     private void CreateUnitActionButtons()
