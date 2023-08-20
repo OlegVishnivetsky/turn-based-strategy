@@ -6,6 +6,8 @@ public class Unit : MonoBehaviour
     [SerializeField] private MoveAction moveAction;
     [SerializeField] private SpinAction spinAction;
 
+    [Space(5), SerializeField] private bool isEnemy;
+
     private int actionPoints = 2;
 
     private BaseAction[] baseActions;
@@ -19,12 +21,12 @@ public class Unit : MonoBehaviour
 
     private void OnEnable()
     {
-        TurnSystem.OnTurnNumberChanged += Instance_OnTurnNumberChanged;
+        TurnSystem.Instance.OnTurnChanged += Instance_OnTurnChanged;
     }
 
     private void OnDisable()
     {
-        TurnSystem.OnTurnNumberChanged -= Instance_OnTurnNumberChanged;
+        TurnSystem.Instance.OnTurnChanged += Instance_OnTurnChanged;
     }
 
     private void Start()
@@ -42,6 +44,11 @@ public class Unit : MonoBehaviour
             LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newGridPosition);
             gridPosition = newGridPosition;
         }
+    }
+
+    public bool IsEnemy()
+    {
+        return isEnemy;
     }
 
     public int GetActionPoints()
@@ -98,8 +105,12 @@ public class Unit : MonoBehaviour
         actionPoints -= amount;
     }
 
-    private void Instance_OnTurnNumberChanged(int turnNumber)
+    private void Instance_OnTurnChanged()
     {
-        actionPoints = Settings.actionPointMax;
+        if ((IsEnemy() && !TurnSystem.Instance.IsPlayerTurn()) ||
+            (!IsEnemy() && TurnSystem.Instance.IsPlayerTurn()))
+        {
+            actionPoints = Settings.actionPointMax;
+        }
     }
 }

@@ -2,12 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UnitActionSystem : MonoBehaviour
+public class UnitActionSystem : SingletonMonobehaviour<UnitActionSystem>
 {
     [SerializeField] private Unit selectedUnit;
     [SerializeField] private LayerMask unitLayerMask;
-
-    public static UnitActionSystem Instance { get; private set; }
 
     public event Action OnSelectedUnitChanged;
     public event Action OnSelectedActionChanged;
@@ -17,18 +15,6 @@ public class UnitActionSystem : MonoBehaviour
     private BaseAction selectedAction;
     private bool isBusy;
 
-
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("There's more than one UnitActionSystem! " + transform + " - " + Instance);
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
-
     private void Start()
     {
         SetSelectedUnit(selectedUnit);
@@ -37,6 +23,11 @@ public class UnitActionSystem : MonoBehaviour
     private void Update()
     {
         if (isBusy)
+        {
+            return;
+        }
+
+        if (!TurnSystem.Instance.IsPlayerTurn())
         {
             return;
         }
@@ -95,6 +86,11 @@ public class UnitActionSystem : MonoBehaviour
                 if (raycastHit.transform.TryGetComponent(out Unit unit))
                 {
                     if (unit == selectedUnit)
+                    {
+                        return false;
+                    }
+
+                    if (unit.IsEnemy())
                     {
                         return false;
                     }

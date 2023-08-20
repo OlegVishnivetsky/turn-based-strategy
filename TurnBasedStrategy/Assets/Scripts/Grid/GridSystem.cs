@@ -83,5 +83,4 @@ public class GridSystem
                 gridPosition.x < width &&
                 gridPosition.z < height;
     }
-
 }
