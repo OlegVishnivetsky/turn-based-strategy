@@ -1,53 +1,72 @@
-using UnityEngine;
 using Cinemachine;
+using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [Header("MOVEMENT PARAMETERS")]
-    [SerializeField] private float moveSpeed = 10f;
-    [SerializeField] private float rotationSpeed = 40f;
-    [Header("ZOOM PARAMETERS")]
+    [Header("MAIN COMPONENTS")]
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+
+    [Header("MAIN PARAMETERS")]
+    [SerializeField] private float moveSpeed;
+
+    [Space(5)]
+    [SerializeField] private float rotationSpeed;
+
+    [Space(5)]
     [SerializeField] private float zoomAmount;
-    [SerializeField] private float zoomSmoothingValue;
-    [Header("COMPONENTS")]
-    [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
+    [SerializeField] private float zoomSpeed;
+    [SerializeField] private float minZoomValue;
+    [SerializeField] private float maxZoomValue;
 
     private CinemachineTransposer cinemachineTransposer;
 
-    private Vector3 targetFollowOffset;
+    private Vector3 inputMoveDirection;
+    private Vector3 rotationVector;
+    private Vector3 followOffset;
 
     private void Start()
     {
-        cinemachineTransposer = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>();
-        targetFollowOffset = cinemachineTransposer.m_FollowOffset;
+        cinemachineTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
+
+        followOffset = cinemachineTransposer.m_FollowOffset;
     }
 
     private void Update()
     {
-        MoveCamera();
-        RotateCamera();
-        ZoomCamera();
+        HandleCameraMovement();
+        HandleCameraRotation();
+        HandleCameraZoom();
     }
 
-    private void ZoomCamera()
+    private void HandleCameraMovement()
     {
-        if (Input.mouseScrollDelta.y > 0)
+        inputMoveDirection = Vector3.zero;
+
+        if (Input.GetKey(KeyCode.W))
         {
-            targetFollowOffset.y -= zoomAmount;
+            inputMoveDirection.z = 1f;
         }
-        if (Input.mouseScrollDelta.y < 0)
+        if (Input.GetKey(KeyCode.A))
         {
-            targetFollowOffset.y += zoomAmount;
+            inputMoveDirection.x = -1f;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            inputMoveDirection.z = -1f;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            inputMoveDirection.x = 1f;
         }
 
-        targetFollowOffset.y = Mathf.Clamp(targetFollowOffset.y, Settings.minFollowYOffset, Settings.maxFollowYOffset);
-        cinemachineTransposer.m_FollowOffset = Vector3.Lerp(cinemachineTransposer.m_FollowOffset,
-            targetFollowOffset, Time.deltaTime * zoomSmoothingValue);
+        Vector3 moveVector = transform.forward * inputMoveDirection.z + transform.right * inputMoveDirection.x;
+
+        transform.position += moveVector * Time.deltaTime * moveSpeed;
     }
 
-    private void RotateCamera()
+    private void HandleCameraRotation()
     {
-        Vector3 rotationVector = Vector3.zero;
+        rotationVector = Vector3.zero;
 
         if (Input.GetKey(KeyCode.Q))
         {
@@ -61,29 +80,24 @@ public class CameraController : MonoBehaviour
         transform.eulerAngles += rotationVector * Time.deltaTime * rotationSpeed;
     }
 
-    private void MoveCamera()
+    private void HandleCameraZoom()
     {
-        Vector3 movementInput = new Vector3(0, 0, 0);
+        float scrollDelta = Input.mouseScrollDelta.y;
 
-        if (Input.GetKey(KeyCode.W))
+        if (scrollDelta > 0f)
         {
-            movementInput.z = 1f;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            movementInput.x = -1f;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            movementInput.z = -1f;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            movementInput.x = 1f;
+            followOffset.y -= zoomAmount;
         }
 
-        Vector3 moveVector = transform.forward * movementInput.z + transform.right * movementInput.x;
+        if (scrollDelta < 0f)
+        {
+            followOffset.y += zoomAmount;
+        }
 
-        transform.position += moveVector * Time.deltaTime * moveSpeed;
+        followOffset = new Vector3(followOffset.x, 
+            Mathf.Clamp(followOffset.y, minZoomValue, maxZoomValue), followOffset.z);
+
+        cinemachineTransposer.m_FollowOffset = Vector3.Lerp(cinemachineTransposer.m_FollowOffset, 
+            followOffset, zoomSpeed * Time.deltaTime);
     }
 }

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6114469391990410515
+--- !u!114 &-627511275028638902
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -21,7 +21,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PolygonPrototype_Object
-  m_Shader: {fileID: -6465566751694194690, guid: 3f6cafd8e6c7439468e51113a73ddc7b, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 3f6cafd8e6c7439468e51113a73ddc7b,
+    type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
